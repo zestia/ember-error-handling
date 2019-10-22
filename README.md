@@ -10,6 +10,8 @@ ember generate instance-initializer error-handling
 ### Example usage
 
 ```javascript
+// app/instance-initializers/error-handling.js
+
 export function initialize(appInstance) {
   const errorHandlingService = appInstance.lookup('service:error-handling');
 
