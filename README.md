@@ -16,11 +16,16 @@ export function initialize(appInstance) {
   const errorHandlingService = appInstance.lookup('service:error-handling');
 
   errorHandlingService.onError(error => {
-    // Send to a third party
+    // Top level error handler.
+    // Here is a good place to send the error to a third party.
   });
 
   errorHandlingService.squelch(error => {
     // Return true to squelch
+  });
+
+  errorHandlingService.squelch(error => {
+    // Squelch can be called multiple times
   });
 }
 
