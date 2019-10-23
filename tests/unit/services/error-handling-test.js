@@ -1,3 +1,5 @@
+/* eslint-disable max-nested-callbacks */
+
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { reject } from 'rsvp';
@@ -14,7 +16,7 @@ module('service:error-handling', function(hooks) {
 
   hooks.beforeEach(function() {
     errorHandlingService = this.owner.lookup('service:error-handling');
-    errorHandlingService.onError = error => (capturedException = error);
+    errorHandlingService.onError(error => (capturedException = error));
   });
 
   module('run loop', function() {
@@ -32,7 +34,7 @@ module('service:error-handling', function(hooks) {
       assert.strictEqual(capturedException, error, 'fires onError');
 
       assert.deepEqual(
-        errorHandlingService.squelched,
+        errorHandlingService.squelchedErrors,
         [],
         'error is not squelched'
       );
@@ -50,7 +52,7 @@ module('service:error-handling', function(hooks) {
       assert.deepEqual(capturedException, error, 'fires onError');
 
       assert.deepEqual(
-        errorHandlingService.squelched,
+        errorHandlingService.squelchedErrors,
         [error],
         'error is squelched'
       );
@@ -69,7 +71,7 @@ module('service:error-handling', function(hooks) {
       // assert.deepEqual(capturedException, error, 'fires onError');
 
       assert.deepEqual(
-        errorHandlingService.squelched,
+        errorHandlingService.squelchedErrors,
         [],
         'error is not squelched'
       );
@@ -87,7 +89,7 @@ module('service:error-handling', function(hooks) {
       assert.deepEqual(capturedException, error, 'fires onError');
 
       assert.deepEqual(
-        errorHandlingService.squelched,
+        errorHandlingService.squelchedErrors,
         [error],
         'error is squelched'
       );

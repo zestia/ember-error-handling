@@ -11,10 +11,9 @@ import RSVP from 'rsvp';
  *
  */
 export default class ErrorHandlingService extends Service {
-  squelched = [];
-  _squelch = [];
-
-  onError() {}
+  squelchedErrors = [];
+  squelchHandlers = [];
+  errorHandler = () => {};
 
   constructor() {
     super(...arguments);
@@ -22,7 +21,11 @@ export default class ErrorHandlingService extends Service {
   }
 
   squelch(func) {
-    this._squelch.push(func);
+    this.squelchHandlers.push(func);
+  }
+
+  onError(errorHandler) {
+    this.errorHandler = errorHandler;
   }
 
   _setupErrorHandling() {
@@ -31,16 +34,16 @@ export default class ErrorHandlingService extends Service {
   }
 
   _errorHandler(error) {
-    this.onError(error);
+    this.errorHandler(error);
 
     if (this._shouldSquelch(error)) {
-      this.squelched.push(error);
+      this.squelchedErrors.push(error);
     } else {
       throw error;
     }
   }
 
   _shouldSquelch(error) {
-    return this._squelch.some(squelch => squelch(error));
+    return this.squelchHandlers.some(squelch => squelch(error));
   }
 }
