@@ -60,15 +60,16 @@ module('service:error-handling', function(hooks) {
   });
 
   module('unhandled promise rejections', function() {
-    test('normal behaviour', function(assert) {
-      assert.expect(2);
+    test('normal behaviour', async function(assert) {
+      assert.expect(3);
 
       errorHandlingService.squelch(() => false);
 
       assert.rejects(reject(error), 'errors throw');
 
-      // How to test this? Error has already been caught by QUnit
-      // assert.deepEqual(capturedException, error, 'fires onError');
+      await settled();
+
+      assert.deepEqual(capturedException, error, 'fires onError');
 
       assert.deepEqual(
         errorHandlingService.squelchedErrors,
