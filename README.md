@@ -26,14 +26,22 @@ export function initialize(appInstance) {
   errorHandlingService.squelch(error => {
     // Return true to squelch
   });
-
-  errorHandlingService.squelch(error => {
-    // Squelch can be called multiple times
-  });
 }
 
 export default {
   name: 'error-handling',
   initialize
 };
+```
+
+### Example
+
+```javascript
+test('something', async function(assert) {
+  assert.expect(1);
+
+  errorHandlingService.squelch(error => {
+    // Squelch can be called multiple times
+  });
+});
 ```
