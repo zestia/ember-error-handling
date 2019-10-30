@@ -1,6 +1,5 @@
 {
   "name": "@zestia/ember-error-handling",
-  "private": true,
   "version": "0.1.1",
   "description": "An Error Handling service for Ember apps",
   "directories": {
