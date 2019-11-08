@@ -8,12 +8,12 @@
   },
   "scripts": {
     "build": "ember build",
-    "lint": "yarn lint:js && yarn lint:hbs",
+    "lint": "npm run lint:js && npm run lint:hbs",
     "lint:hbs": "ember-template-lint .",
     "lint:js": "eslint .",
     "prettier": "prettier '**/*.{js,json,html,md}' --write",
     "start": "ember serve",
-    "test": "ember test && yarn lint",
+    "test": "ember test && npm run lint",
     "test:all": "ember try:each"
   },
   "repository": {
