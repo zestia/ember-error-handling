@@ -1,3 +1,5 @@
+/* eslint-disable max-nested-callbacks */
+
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { reject } from 'rsvp';
@@ -17,24 +19,28 @@ module('service:error-handling', function(hooks) {
 
   module('run loop', function() {
     test('normal behaviour', function(assert) {
+      assert.expect(1);
+
+      assert.throws(() => {
+        run(() => {
+          throw error;
+        });
+      });
+    });
+
+    test('top level error handler', function(assert) {
       assert.expect(2);
 
       let capturedException;
 
-      errorHandlingService.squelch(() => false);
       errorHandlingService.onError(error => (capturedException = error));
 
       run(() => {
         throw error;
       });
 
-      assert.deepEqual(capturedException, error, 'fires onError');
-
-      assert.deepEqual(
-        errorHandlingService.squelchedErrors,
-        [],
-        'error is not squelched'
-      );
+      assert.deepEqual(capturedException, error);
+      assert.deepEqual(errorHandlingService.squelchedErrors, []);
     });
 
     test('squelching', function(assert) {
@@ -49,36 +55,31 @@ module('service:error-handling', function(hooks) {
         throw error;
       });
 
-      assert.strictEqual(capturedException, undefined, 'does not fire onError');
-
-      assert.deepEqual(
-        errorHandlingService.squelchedErrors,
-        [error],
-        'error is squelched'
-      );
+      assert.strictEqual(capturedException, undefined);
+      assert.deepEqual(errorHandlingService.squelchedErrors, [error]);
     });
   });
 
   module('unhandled promise rejections', function() {
-    test('normal behaviour', async function(assert) {
+    test('normal behaviour', function(assert) {
+      assert.expect(1);
+
+      assert.rejects(reject(error));
+    });
+
+    test('top level error handler', async function(assert) {
       assert.expect(2);
 
       let capturedException;
 
-      errorHandlingService.squelch(() => false);
       errorHandlingService.onError(error => (capturedException = error));
 
       reject(error);
 
       await settled();
 
-      assert.deepEqual(capturedException, error, 'fires onError');
-
-      assert.deepEqual(
-        errorHandlingService.squelchedErrors,
-        [],
-        'error is not squelched'
-      );
+      assert.deepEqual(capturedException, error);
+      assert.deepEqual(errorHandlingService.squelchedErrors, []);
     });
 
     test('squelching', async function(assert) {
@@ -93,13 +94,8 @@ module('service:error-handling', function(hooks) {
 
       await settled();
 
-      assert.strictEqual(capturedException, undefined, 'does not fire onError');
-
-      assert.deepEqual(
-        errorHandlingService.squelchedErrors,
-        [error],
-        'error is squelched'
-      );
+      assert.strictEqual(capturedException, undefined);
+      assert.deepEqual(errorHandlingService.squelchedErrors, [error]);
     });
   });
 });
