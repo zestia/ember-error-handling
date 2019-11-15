@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.0
+
+- Top level error handler no longer fires for squelched errors
+
 ## 0.1.2
 
 - Use NPM registry for now

@@ -13,7 +13,10 @@ import RSVP from 'rsvp';
 export default class ErrorHandlingService extends Service {
   squelchedErrors = [];
   squelchHandlers = [];
-  errorHandler = () => {};
+
+  errorHandler = error => {
+    throw error;
+  };
 
   constructor() {
     super(...arguments);
@@ -34,12 +37,10 @@ export default class ErrorHandlingService extends Service {
   }
 
   _errorHandler(error) {
-    this.errorHandler(error);
-
     if (this._shouldSquelch(error)) {
       this.squelchedErrors.push(error);
     } else {
-      throw error;
+      this.errorHandler(error);
     }
   }
 
