@@ -2,14 +2,6 @@ import Service from '@ember/service';
 import Ember from 'ember';
 import RSVP from 'rsvp';
 
-/**
- * The Error Handling Service allows us to:
- *
- * 1. Control unhandled exceptions
- * 2. Broadcast when an error occurs
- * 3. Squelch errors
- *
- */
 export default class ErrorHandlingService extends Service {
   squelchedErrors = [];
   squelchHandlers = [];
