@@ -1,5 +1,7 @@
 # @zestia/ember-error-handling
 
+<a href="https://badge.fury.io/js/%40zestia%2Fember-error-handling"><img src="https://badge.fury.io/js/%40zestia%2Fember-error-handling.svg" alt="npm version" height="18"></a> &nbsp; <a href="http://travis-ci.org/zestia/ember-error-handling"><img src="https://travis-ci.org/zestia/ember-error-handling.svg?branch=master"></a> &nbsp; <a href="https://david-dm.org/zestia/ember-error-handling#badge-embed"><img src="https://david-dm.org/zestia/ember-error-handling.svg"></a> &nbsp; <a href="https://david-dm.org/zestia/ember-error-handling#dev-badge-embed"><img src="https://david-dm.org/zestia/ember-error-handling/dev-status.svg"></a> &nbsp; <a href="https://emberobserver.com/addons/@zestia/ember-error-handling"><img src="https://emberobserver.com/badges/-zestia-ember-error-handling.svg"></a>
+
 This Ember addon provides a top level error handler for your application.
 
 It also allows specific errors to be squelched (ignored completely), which is paricularly useful when testing.
