@@ -14,7 +14,7 @@ module('acceptance:test2', function(hooks) {
     this.server.shutdown();
   });
 
-  test('fetch success', async function(assert) {
+  test('adhoc fetch success', async function(assert) {
     assert.expect(2);
 
     this.server.get('/test2', () => {
@@ -28,7 +28,7 @@ module('acceptance:test2', function(hooks) {
     assert.dom(this.element).includesText('Hello World');
   });
 
-  test('handled fetch failure', async function(assert) {
+  test('adhoc fetch failure', async function(assert) {
     assert.expect(2);
 
     this.server.get('/test2', () => {
