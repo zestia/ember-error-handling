@@ -6,6 +6,10 @@ const DummyRouter = Router.extend({
   rootURL: config.rootURL
 });
 
-DummyRouter.map(function() {});
+DummyRouter.map(function() {
+  this.route('test1');
+  this.route('test2');
+  this.route('test3');
+});
 
 export default DummyRouter;
