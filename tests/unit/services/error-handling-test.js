@@ -1,5 +1,4 @@
-/* eslint-disable max-nested-callbacks */
-
+import Ember from 'ember';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { reject } from 'rsvp';
@@ -17,14 +16,12 @@ module('service:error-handling', function(hooks) {
     errorHandlingService = this.owner.lookup('service:error-handling');
   });
 
-  module('run loop', function() {
+  module('uncaught errors', function() {
     test('normal behaviour', function(assert) {
       assert.expect(1);
 
       assert.throws(() => {
-        run(() => {
-          throw error;
-        });
+        throw error;
       });
     });
 
@@ -33,7 +30,7 @@ module('service:error-handling', function(hooks) {
 
       let capturedException;
 
-      errorHandlingService.onError(error => (capturedException = error));
+      errorHandlingService.onerror = error => (capturedException = error);
 
       run(() => {
         throw error;
@@ -49,7 +46,7 @@ module('service:error-handling', function(hooks) {
       let capturedException;
 
       errorHandlingService.squelch(() => true);
-      errorHandlingService.onError(error => (capturedException = error));
+      errorHandlingService.onerror = error => (capturedException = error);
 
       run(() => {
         throw error;
@@ -57,6 +54,27 @@ module('service:error-handling', function(hooks) {
 
       assert.strictEqual(capturedException, undefined);
       assert.deepEqual(errorHandlingService.squelchedErrors, [error]);
+    });
+
+    test('Ember.onerror', function(assert) {
+      assert.expect(3);
+
+      const originalOnError = Ember.onerror;
+
+      Ember.onerror = () => {
+        assert.step('original error handler');
+        originalOnError();
+      };
+
+      errorHandlingService.onerror = () => {
+        assert.step('top level error handler');
+      };
+
+      run(() => {
+        throw error;
+      });
+
+      assert.verifySteps(['original error handler', 'top level error handler']);
     });
   });
 
@@ -72,7 +90,7 @@ module('service:error-handling', function(hooks) {
 
       let capturedException;
 
-      errorHandlingService.onError(error => (capturedException = error));
+      errorHandlingService.onerror = error => (capturedException = error);
 
       reject(error);
 
@@ -88,7 +106,7 @@ module('service:error-handling', function(hooks) {
       let capturedException;
 
       errorHandlingService.squelch(() => true);
-      errorHandlingService.onError(error => (capturedException = error));
+      errorHandlingService.onerror = error => (capturedException = error);
 
       reject(error);
 
