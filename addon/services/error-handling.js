@@ -16,10 +16,6 @@ export default class ErrorHandlingService extends Service {
     this.squelchHandlers.push(func);
   }
 
-  onError(errorHandler) {
-    this.errorHandler = errorHandler;
-  }
-
   _setupEmberOnErrorHandler() {
     const originalOnError = Ember.onerror;
 
@@ -39,7 +35,7 @@ export default class ErrorHandlingService extends Service {
   _handleError(error) {
     if (this._shouldSquelch(error)) {
       this.squelchedErrors.push(error);
-    } else {
+    } else if (typeof this.onerror === 'function') {
       this.onerror(error);
     }
   }

@@ -39,6 +39,18 @@ module('service:error-handling', function(hooks) {
       assert.deepEqual(capturedError, testError);
     });
 
+    test('no top level error handler', function(assert) {
+      assert.expect(0);
+
+      Ember.onerror = () => {};
+
+      this.owner.lookup('service:error-handling');
+
+      run(() => {
+        throw testError;
+      });
+    });
+
     test('squelching', function(assert) {
       assert.expect(1);
 

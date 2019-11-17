@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.2
+
+- Upgrade dependencies
+- Add more test cases
+
 ## 1.1.1
 
 - Fix test
