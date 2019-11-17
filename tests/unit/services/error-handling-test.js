@@ -8,70 +8,65 @@ import { run } from '@ember/runloop';
 module('service:error-handling', function(hooks) {
   setupTest(hooks);
 
-  const error = new Error('foo');
-
-  let errorHandlingService;
-
-  hooks.beforeEach(function() {
-    errorHandlingService = this.owner.lookup('service:error-handling');
-  });
+  const testError = new Error('foo');
 
   module('uncaught errors', function() {
     test('normal behaviour', function(assert) {
       assert.expect(1);
 
       assert.throws(() => {
-        throw error;
+        throw testError;
       });
     });
 
     test('top level error handler', function(assert) {
       assert.expect(2);
 
-      let capturedException;
+      let capturedError;
 
-      errorHandlingService.onerror = error => (capturedException = error);
+      const errorHandlingService = this.owner.lookup('service:error-handling');
+      errorHandlingService.onerror = error => (capturedError = error);
 
       run(() => {
-        throw error;
+        throw testError;
       });
 
-      assert.deepEqual(capturedException, error);
+      assert.deepEqual(capturedError, testError);
       assert.deepEqual(errorHandlingService.squelchedErrors, []);
     });
 
     test('squelching', function(assert) {
       assert.expect(2);
 
-      let capturedException;
+      let capturedError;
 
-      errorHandlingService.squelch(() => true);
-      errorHandlingService.onerror = error => (capturedException = error);
+      const errorHandlingService = this.owner.lookup('service:error-handling');
+      errorHandlingService.onerror = error => (capturedError = error);
+      errorHandlingService.squelch(error => error === testError);
 
       run(() => {
-        throw error;
+        throw testError;
       });
 
-      assert.strictEqual(capturedException, undefined);
-      assert.deepEqual(errorHandlingService.squelchedErrors, [error]);
+      assert.strictEqual(capturedError, undefined);
+      assert.deepEqual(errorHandlingService.squelchedErrors, [testError]);
     });
 
     test('Ember.onerror', function(assert) {
       assert.expect(3);
 
-      const originalOnError = Ember.onerror;
-
       Ember.onerror = () => {
         assert.step('original error handler');
-        originalOnError();
       };
+
+      const errorHandlingService = this.owner.lookup('service:error-handling');
 
       errorHandlingService.onerror = () => {
         assert.step('top level error handler');
       };
 
       run(() => {
-        throw error;
+        throw testError;
       });
 
       assert.verifySteps(['original error handler', 'top level error handler']);
@@ -82,38 +77,40 @@ module('service:error-handling', function(hooks) {
     test('normal behaviour', function(assert) {
       assert.expect(1);
 
-      assert.rejects(reject(error));
+      assert.rejects(reject(testError));
     });
 
     test('top level error handler', async function(assert) {
       assert.expect(2);
 
-      let capturedException;
+      let capturedError;
 
-      errorHandlingService.onerror = error => (capturedException = error);
+      const errorHandlingService = this.owner.lookup('service:error-handling');
+      errorHandlingService.onerror = error => (capturedError = error);
 
-      reject(error);
+      reject(testError);
 
       await settled();
 
-      assert.deepEqual(capturedException, error);
+      assert.deepEqual(capturedError, testError);
       assert.deepEqual(errorHandlingService.squelchedErrors, []);
     });
 
     test('squelching', async function(assert) {
       assert.expect(2);
 
-      let capturedException;
+      let capturedError;
 
-      errorHandlingService.squelch(() => true);
-      errorHandlingService.onerror = error => (capturedException = error);
+      const errorHandlingService = this.owner.lookup('service:error-handling');
+      errorHandlingService.onerror = error => (capturedError = error);
+      errorHandlingService.squelch(error => error === testError);
 
-      reject(error);
+      reject(testError);
 
       await settled();
 
-      assert.strictEqual(capturedException, undefined);
-      assert.deepEqual(errorHandlingService.squelchedErrors, [error]);
+      assert.strictEqual(capturedError, undefined);
+      assert.deepEqual(errorHandlingService.squelchedErrors, [testError]);
     });
   });
 });

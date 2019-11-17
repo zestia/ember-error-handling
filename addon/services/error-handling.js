@@ -24,7 +24,7 @@ export default class ErrorHandlingService extends Service {
     const originalOnError = Ember.onerror;
 
     Ember.onerror = error => {
-      if (typeof oldOnError === 'function') {
+      if (typeof originalOnError === 'function') {
         originalOnError.call(Ember, error);
       }
 

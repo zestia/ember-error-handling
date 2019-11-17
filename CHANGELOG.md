@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+- Fix test
+
 ## 1.1.0
 
 - Ember `.onerror` does not overwrite original `Ember.onerror`
