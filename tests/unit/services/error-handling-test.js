@@ -12,7 +12,7 @@ module('service:error-handling', function(hooks) {
 
   const testError = new Error('foo');
 
-  module('run loop', function() {
+  module('uncaught errors', function() {
     test('normal behaviour', function(assert) {
       assert.expect(1);
 
