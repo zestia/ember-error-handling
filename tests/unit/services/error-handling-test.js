@@ -1,3 +1,5 @@
+/* eslint-disable max-nested-callbacks */
+
 import Ember from 'ember';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
@@ -10,12 +12,14 @@ module('service:error-handling', function(hooks) {
 
   const testError = new Error('foo');
 
-  module('uncaught errors', function() {
+  module('run loop', function() {
     test('normal behaviour', function(assert) {
       assert.expect(1);
 
       assert.throws(() => {
-        throw testError;
+        run(() => {
+          throw testError;
+        });
       });
     });
 
