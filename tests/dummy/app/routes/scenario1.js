@@ -1,8 +1,8 @@
 import Route from '@ember/routing/route';
 import request from '../utils/request';
 
-export default class Test1Route extends Route {
+export default class Scenario1Route extends Route {
   model() {
-    return request('/test1');
+    return request('/scenario1');
   }
 }

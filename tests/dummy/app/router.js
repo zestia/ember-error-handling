@@ -7,9 +7,9 @@ const DummyRouter = Router.extend({
 });
 
 DummyRouter.map(function() {
-  this.route('test1');
-  this.route('test2');
-  this.route('test3');
+  this.route('scenario1');
+  this.route('scenario2');
+  this.route('scenario3');
 });
 
 export default DummyRouter;

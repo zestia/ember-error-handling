@@ -4,7 +4,7 @@ import { setupApplicationTest } from 'ember-qunit';
 import Pretender from 'pretender';
 import { AJAXError } from '../../utils/errors';
 
-module('acceptance:test3', function(hooks) {
+module('acceptance:scenario3', function(hooks) {
   setupApplicationTest(hooks);
 
   hooks.beforeEach(function() {
@@ -23,13 +23,13 @@ module('acceptance:test3', function(hooks) {
       return error instanceof AJAXError;
     });
 
-    this.server.get('/test3', () => {
+    this.server.get('/scenario3', () => {
       return [500, {}];
     });
 
-    await visit('/test3');
+    await visit('/scenario3');
     await click('button');
 
-    assert.equal(currentRouteName(), 'test3');
+    assert.equal(currentRouteName(), 'scenario3');
   });
 });
