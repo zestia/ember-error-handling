@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0
+
+- Ember `.onerror` does not overwrite original `Ember.onerror`
+
 ## 1.0.0
 
 - Top level error handler no longer fires for squelched errors
