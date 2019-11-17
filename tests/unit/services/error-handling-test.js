@@ -24,50 +24,43 @@ module('service:error-handling', function(hooks) {
     });
 
     test('top level error handler', function(assert) {
-      assert.expect(2);
+      assert.expect(1);
 
       let capturedError;
 
-      const errorHandlingService = this.owner.lookup('service:error-handling');
-      errorHandlingService.onerror = error => (capturedError = error);
+      const service = this.owner.lookup('service:error-handling');
+
+      service.onerror = error => (capturedError = error);
 
       run(() => {
         throw testError;
       });
 
       assert.deepEqual(capturedError, testError);
-      assert.deepEqual(errorHandlingService.squelchedErrors, []);
     });
 
     test('squelching', function(assert) {
-      assert.expect(2);
+      assert.expect(1);
 
-      let capturedError;
+      const service = this.owner.lookup('service:error-handling');
 
-      const errorHandlingService = this.owner.lookup('service:error-handling');
-      errorHandlingService.onerror = error => (capturedError = error);
-      errorHandlingService.squelch(error => error === testError);
+      service.squelch(error => error === testError);
 
       run(() => {
         throw testError;
       });
 
-      assert.strictEqual(capturedError, undefined);
-      assert.deepEqual(errorHandlingService.squelchedErrors, [testError]);
+      assert.deepEqual(service.squelchedErrors, [testError]);
     });
 
     test('Ember.onerror', function(assert) {
       assert.expect(3);
 
-      Ember.onerror = () => {
-        assert.step('original error handler');
-      };
+      Ember.onerror = () => assert.step('original error handler');
 
-      const errorHandlingService = this.owner.lookup('service:error-handling');
+      const service = this.owner.lookup('service:error-handling');
 
-      errorHandlingService.onerror = () => {
-        assert.step('top level error handler');
-      };
+      service.onerror = () => assert.step('top level error handler');
 
       run(() => {
         throw testError;
@@ -85,36 +78,33 @@ module('service:error-handling', function(hooks) {
     });
 
     test('top level error handler', async function(assert) {
-      assert.expect(2);
+      assert.expect(1);
 
       let capturedError;
 
-      const errorHandlingService = this.owner.lookup('service:error-handling');
-      errorHandlingService.onerror = error => (capturedError = error);
+      const service = this.owner.lookup('service:error-handling');
+
+      service.onerror = error => (capturedError = error);
 
       reject(testError);
 
       await settled();
 
       assert.deepEqual(capturedError, testError);
-      assert.deepEqual(errorHandlingService.squelchedErrors, []);
     });
 
     test('squelching', async function(assert) {
-      assert.expect(2);
+      assert.expect(1);
 
-      let capturedError;
+      const service = this.owner.lookup('service:error-handling');
 
-      const errorHandlingService = this.owner.lookup('service:error-handling');
-      errorHandlingService.onerror = error => (capturedError = error);
-      errorHandlingService.squelch(error => error === testError);
+      service.squelch(error => error === testError);
 
       reject(testError);
 
       await settled();
 
-      assert.strictEqual(capturedError, undefined);
-      assert.deepEqual(errorHandlingService.squelchedErrors, [testError]);
+      assert.deepEqual(service.squelchedErrors, [testError]);
     });
   });
 });
