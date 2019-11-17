@@ -42,8 +42,6 @@ module('service:error-handling', function(hooks) {
     test('no top level error handler', function(assert) {
       assert.expect(0);
 
-      Ember.onerror = () => {};
-
       this.owner.lookup('service:error-handling');
 
       run(() => {
