@@ -1,10 +1,10 @@
 /* eslint-disable max-nested-callbacks */
 
 import Ember from 'ember';
-import { module, test } from 'qunit';
+import { module, test, skip } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { reject } from 'rsvp';
-import { settled } from '@ember/test-helpers';
+import { settled, validateErrorHandler } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
 
 module('service:error-handling', function(hooks) {
@@ -13,18 +13,8 @@ module('service:error-handling', function(hooks) {
   const testError = new Error('foo');
 
   module('uncaught errors', function() {
-    test('normal behaviour', function(assert) {
-      assert.expect(1);
-
-      assert.throws(() => {
-        run(() => {
-          throw testError;
-        });
-      });
-    });
-
     test('top level error handler', function(assert) {
-      assert.expect(1);
+      assert.expect(3);
 
       let capturedError;
 
@@ -32,39 +22,133 @@ module('service:error-handling', function(hooks) {
 
       service.onerror = error => (capturedError = error);
 
-      run(() => {
-        throw testError;
+      assert.throws(() => {
+        run(() => {
+          throw testError;
+        });
       });
 
-      assert.deepEqual(capturedError, testError);
-    });
+      assert.deepEqual(
+        capturedError,
+        testError,
+        'onerror fires when an error is thrown'
+      );
 
-    test('no top level error handler', function(assert) {
-      assert.expect(0);
-
-      this.owner.lookup('service:error-handling');
-
-      run(() => {
-        throw testError;
-      });
+      assert.deepEqual(
+        service.squelchedErrors,
+        [],
+        'no errors are logged as being squelched'
+      );
     });
 
     test('squelching', function(assert) {
-      assert.expect(1);
+      assert.expect(4);
 
       const service = this.owner.lookup('service:error-handling');
 
-      service.squelch(error => error === testError);
+      service.onerror = () => assert.step('onerror');
+
+      service.squelch(() => assert.step('squelch'));
+
+      service.squelch(error => {
+        assert.step('squelch');
+
+        return error === testError;
+      });
 
       run(() => {
         throw testError;
       });
 
-      assert.deepEqual(service.squelchedErrors, [testError]);
+      assert.verifySteps(
+        ['squelch', 'squelch'],
+        'squelch callbacks are called'
+      );
+
+      assert.deepEqual(
+        service.squelchedErrors,
+        [testError],
+        'error is logged as squelched if callback returns true'
+      );
+    });
+  });
+
+  module('unhandled promise rejections', function() {
+    // This module specifically tests with no rejection reason,
+    // because if a reason is provided, Ember.onerror will handle it
+    // not RSVP.on('error'). And we want to test the latter.
+
+    skip('top level error handler', async function(assert) {
+      assert.expect(2);
+
+      let capturedError = null;
+
+      const service = this.owner.lookup('service:error-handling');
+
+      service.onerror = error => (capturedError = error);
+
+      reject();
+
+      await settled();
+
+      assert.deepEqual(
+        capturedError,
+        undefined,
+        'onerror fires when an promise rejection is uncaught'
+      );
+
+      assert.deepEqual(
+        service.squelchedErrors,
+        [],
+        'no errors are logged as being squelched'
+      );
     });
 
-    test('Ember.onerror', function(assert) {
-      assert.expect(3);
+    test('squelching', async function(assert) {
+      assert.expect(4);
+
+      const service = this.owner.lookup('service:error-handling');
+
+      service.onerror = () => assert.step('onerror');
+
+      service.squelch(() => assert.step('squelch'));
+
+      service.squelch(() => {
+        assert.step('squelch');
+
+        return true;
+      });
+
+      reject();
+
+      await settled();
+
+      assert.verifySteps(
+        ['squelch', 'squelch'],
+        'squelch callbacks are called'
+      );
+
+      assert.deepEqual(
+        service.squelchedErrors,
+        [undefined],
+        'rejection reason is logged as squelched if callback returns true'
+      );
+    });
+  });
+
+  module('Ember.onerror', function(hooks) {
+    let originalOnError;
+
+    hooks.beforeEach(function() {
+      originalOnError = Ember.onerror;
+    });
+
+    hooks.afterEach(function() {
+      Ember.onerror = originalOnError;
+    });
+
+    test('original handler', function(assert) {
+      assert.expect(4);
 
       Ember.onerror = () => assert.step('original error handler');
 
@@ -72,49 +156,29 @@ module('service:error-handling', function(hooks) {
 
       service.onerror = () => assert.step('top level error handler');
 
-      run(() => {
-        throw testError;
+      assert.throws(() => {
+        run(() => {
+          throw testError;
+        });
       });
 
-      assert.verifySteps(['original error handler', 'top level error handler']);
-    });
-  });
-
-  module('unhandled promise rejections', function() {
-    test('normal behaviour', function(assert) {
-      assert.expect(1);
-
-      assert.rejects(reject(testError));
+      assert.verifySteps(
+        ['original error handler', 'top level error handler'],
+        'top level error handler does not overwrite the Ember.onerror'
+      );
     });
 
-    test('top level error handler', async function(assert) {
+    test('validate re-throwing', function(assert) {
       assert.expect(1);
 
-      let capturedError;
+      this.owner.lookup('service:error-handling');
 
-      const service = this.owner.lookup('service:error-handling');
+      const result = validateErrorHandler();
 
-      service.onerror = error => (capturedError = error);
-
-      reject(testError);
-
-      await settled();
-
-      assert.deepEqual(capturedError, testError);
-    });
-
-    test('squelching', async function(assert) {
-      assert.expect(1);
-
-      const service = this.owner.lookup('service:error-handling');
-
-      service.squelch(error => error === testError);
-
-      reject(testError);
-
-      await settled();
-
-      assert.deepEqual(service.squelchedErrors, [testError]);
+      assert.ok(
+        result.isValid,
+        'top level error handler re-throws so that tests will fail'
+      );
     });
   });
 });

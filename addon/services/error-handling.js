@@ -35,8 +35,15 @@ export default class ErrorHandlingService extends Service {
   _handleError(error) {
     if (this._shouldSquelch(error)) {
       this.squelchedErrors.push(error);
-    } else if (typeof this.onerror === 'function') {
+      return;
+    }
+
+    if (typeof this.onerror === 'function') {
       this.onerror(error);
+    }
+
+    if (Ember.testing) {
+      throw error;
     }
   }
 
