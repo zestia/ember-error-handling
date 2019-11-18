@@ -62,7 +62,7 @@ module('service:error-handling', function(hooks) {
 
       assert.verifySteps(
         ['squelch', 'squelch'],
-        'squelch callbacks are called'
+        'top level error handler is not called, and squelch callbacks are called'
       );
 
       assert.deepEqual(
@@ -125,7 +125,7 @@ module('service:error-handling', function(hooks) {
 
       assert.verifySteps(
         ['squelch', 'squelch'],
-        'squelch callbacks are called'
+        'top level error handler is not called, and squelch callbacks are called'
       );
 
       assert.deepEqual(
@@ -178,6 +178,25 @@ module('service:error-handling', function(hooks) {
       assert.ok(
         result.isValid,
         'top level error handler re-throws so that tests will fail'
+      );
+    });
+
+    test('squelching', function(assert) {
+      assert.expect(2);
+
+      Ember.onerror = assert.step('Ember.onerror');
+
+      const service = this.owner.lookup('service:error-handling');
+
+      service.squelch(error => error === testError);
+
+      run(() => {
+        throw testError;
+      });
+
+      assert.verifySteps(
+        ['Ember.onerror'],
+        'Ember.onerror still fires despite error being squelched'
       );
     });
   });
