@@ -164,7 +164,7 @@ module('service:error-handling', function(hooks) {
 
       assert.verifySteps(
         ['original error handler', 'top level error handler'],
-        'top level error handler does not overwrite the Ember.onerror'
+        'top level error handler does not overwrite original Ember.onerror'
       );
     });
 
