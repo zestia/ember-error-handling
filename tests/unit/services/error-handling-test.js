@@ -1,4 +1,4 @@
-/* eslint-disable max-nested-callbacks */
+/* eslint-disable max-nested-callbacks, ember/no-ember-testing-in-module-scope */
 
 import Ember from 'ember';
 import { module, test, skip } from 'qunit';
@@ -197,6 +197,38 @@ module('service:error-handling', function(hooks) {
       assert.verifySteps(
         ['Ember.onerror'],
         'Ember.onerror still fires despite error being squelched'
+      );
+    });
+  });
+
+  module('Ember.testing', function() {
+    let originalTesting;
+
+    hooks.beforeEach(function() {
+      originalTesting = Ember.testing;
+    });
+
+    hooks.afterEach(function() {
+      Ember.testing = originalTesting;
+    });
+
+    test('no top error handler', function(assert) {
+      assert.expect(1);
+
+      Ember.testing = false;
+
+      this.owner.lookup('service:error-handling');
+
+      assert.throws(
+        () => {
+          run(() => {
+            throw testError;
+          });
+        },
+        `
+        if no top level error handler is set, the error is re-thrown so that
+        its presence in the console will inform developers.
+      `
       );
     });
   });

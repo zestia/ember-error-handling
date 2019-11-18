@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.4
+
+- Re-throw error if no top level handler is defined
+
 ## 1.1.3
 
 - Add more test cases
