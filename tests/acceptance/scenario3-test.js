@@ -16,6 +16,27 @@ module('acceptance:scenario3', function(hooks) {
     this.server.shutdown();
   });
 
+  test('fetch success', async function(assert) {
+    assert.expect(2);
+
+    this.server.get('/scenario3', () => {
+      return [200, {}, 'Scenario 3'];
+    });
+
+    await visit('/scenario3');
+    await click('button');
+
+    assert.equal(
+      currentRouteName(),
+      'scenario3',
+      'navigates to scenario 3 route'
+    );
+
+    assert
+      .dom(this.element)
+      .includesText('Scenario 3', 'scenario 3 is displayed');
+  });
+
   test('unhandled fetch failure', async function(assert) {
     assert.expect(1);
 

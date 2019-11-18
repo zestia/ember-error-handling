@@ -18,7 +18,7 @@ module('acceptance:scenario2', function(hooks) {
     assert.expect(2);
 
     this.server.get('/scenario2', () => {
-      return [200, {}, 'Hello World'];
+      return [200, {}, 'Scenario 2'];
     });
 
     await visit('/scenario2');
@@ -32,7 +32,7 @@ module('acceptance:scenario2', function(hooks) {
 
     assert
       .dom(this.element)
-      .includesText('Hello World', 'scenario 2 is displayed');
+      .includesText('Scenario 2', 'scenario 2 is displayed');
   });
 
   test('handled fetch failure', async function(assert) {
