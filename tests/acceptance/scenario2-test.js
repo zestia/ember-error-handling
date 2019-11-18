@@ -24,8 +24,15 @@ module('acceptance:scenario2', function(hooks) {
     await visit('/scenario2');
     await click('button');
 
-    assert.equal(currentRouteName(), 'scenario2');
-    assert.dom(this.element).includesText('Hello World');
+    assert.equal(
+      currentRouteName(),
+      'scenario2',
+      'navigates to scenario 2 route'
+    );
+
+    assert
+      .dom(this.element)
+      .includesText('Hello World', 'scenario 2 is displayed');
   });
 
   test('handled fetch failure', async function(assert) {
@@ -38,7 +45,17 @@ module('acceptance:scenario2', function(hooks) {
     await visit('/scenario2');
     await click('button');
 
-    assert.equal(currentRouteName(), 'scenario2');
-    assert.dom(this.element).includesText('Internal Server Error');
+    assert.equal(
+      currentRouteName(),
+      'scenario2',
+      'does not navigate to the error route'
+    );
+
+    assert
+      .dom(this.element)
+      .includesText(
+        'Internal Server Error',
+        'the error message is displayed and considered handled'
+      );
   });
 });

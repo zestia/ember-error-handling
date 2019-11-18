@@ -30,6 +30,11 @@ module('acceptance:scenario3', function(hooks) {
     await visit('/scenario3');
     await click('button');
 
-    assert.equal(currentRouteName(), 'scenario3');
+    assert.equal(
+      currentRouteName(),
+      'scenario3',
+      'despite there being an unhandled error, this test still passes ' +
+        'due to it being specifically ignored in this circumstance'
+    );
   });
 });

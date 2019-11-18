@@ -23,8 +23,15 @@ module('acceptance:scenario1', function(hooks) {
 
     await visit('/scenario1');
 
-    assert.equal(currentRouteName(), 'scenario1');
-    assert.dom(this.element).includesText('Hello World');
+    assert.equal(
+      currentRouteName(),
+      'scenario1',
+      'navigates to scenario 1 route'
+    );
+
+    assert
+      .dom(this.element)
+      .includesText('Hello World', 'scenario 1 is displayed');
   });
 
   test('model hook fetch failure', async function(assert) {
@@ -36,7 +43,14 @@ module('acceptance:scenario1', function(hooks) {
 
     await visit('/scenario1');
 
-    assert.equal(currentRouteName(), 'error');
-    assert.dom(this.element).includesText('An error occurred');
+    assert.equal(
+      currentRouteName(),
+      'error',
+      'automatically redirects to the error route'
+    );
+
+    assert
+      .dom(this.element)
+      .includesText('An error occurred', 'error template is displayed');
   });
 });
