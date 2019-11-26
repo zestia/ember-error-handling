@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.5
+
+- Upgrade dependencies
+
 ## 1.1.4
 
 - Re-throw error if no top level handler is defined
