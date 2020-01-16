@@ -1,6 +1,24 @@
 # @zestia/ember-error-handling
 
-<a href="https://badge.fury.io/js/%40zestia%2Fember-error-handling"><img src="https://badge.fury.io/js/%40zestia%2Fember-error-handling.svg" alt="npm version" height="18"></a> &nbsp; <a href="http://travis-ci.org/zestia/ember-error-handling"><img src="https://travis-ci.org/zestia/ember-error-handling.svg?branch=master"></a> &nbsp; <a href="https://david-dm.org/zestia/ember-error-handling#badge-embed"><img src="https://david-dm.org/zestia/ember-error-handling.svg"></a> &nbsp; <a href="https://david-dm.org/zestia/ember-error-handling#dev-badge-embed"><img src="https://david-dm.org/zestia/ember-error-handling/dev-status.svg"></a> &nbsp; <a href="https://emberobserver.com/addons/@zestia/ember-error-handling"><img src="https://emberobserver.com/badges/-zestia-ember-error-handling.svg"></a>
+<p>
+  <a href="http://travis-ci.org/zestia/ember-error-handling">
+    <img src="https://travis-ci.org/zestia/ember-error-handling.svg?branch=master">
+  </a>
+
+  <a href="https://david-dm.org/zestia/ember-error-handling#badge-embed">
+    <img src="https://david-dm.org/zestia/ember-error-handling.svg">
+  </a>
+
+  <a href="https://david-dm.org/zestia/ember-error-handling#dev-badge-embed">
+    <img src="https://david-dm.org/zestia/ember-error-handling/dev-status.svg">
+  </a>
+
+  <a href="https://emberobserver.com/addons/@zestia/ember-error-handling">
+    <img src="https://emberobserver.com/badges/-zestia-ember-error-handling.svg">
+  </a>
+
+  <img src="https://img.shields.io/badge/Ember-%3E%3D%203.11-brightgreen">
+</p>
 
 The Ember guides suggest using `Ember.onerror` to handle errors and `Ember.RSVP.on('error')` to handle uncaught promise rejections. More often than not, you want to use the same handler for both these scenarios.
 
