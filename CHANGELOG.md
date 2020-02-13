@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.7
+
+- Upgrade dependencies
+
 ## 1.1.6
 
 - Upgrade dependencies
