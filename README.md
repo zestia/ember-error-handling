@@ -17,7 +17,7 @@
     <img src="https://emberobserver.com/badges/-zestia-ember-error-handling.svg">
   </a>
 
-  <img src="https://img.shields.io/badge/Ember-%3E%3D%203.11-brightgreen">
+  <img src="https://img.shields.io/badge/Ember-%3E%3D%203.12-brightgreen">
 </p>
 
 The Ember guides suggest using `Ember.onerror` to handle errors and `Ember.RSVP.on('error')` to handle uncaught promise rejections. More often than not, you want to use the same handler for both these scenarios.
