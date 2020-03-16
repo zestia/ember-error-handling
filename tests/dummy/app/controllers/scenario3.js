@@ -2,7 +2,7 @@ import Controller from '@ember/controller';
 import { Promise } from 'rsvp';
 import { action } from '@ember/object';
 
-export default class Scenario2Controller extends Controller {
+export default class Scenario3Controller extends Controller {
   @action
   loadData() {
     return this._loadData();
