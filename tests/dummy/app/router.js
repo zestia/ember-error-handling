@@ -13,4 +13,6 @@ Router.map(function() {
   this.route('scenario4');
   this.route('scenario5');
   this.route('scenario6');
+  this.route('scenario7');
+  this.route('scenario8');
 });
