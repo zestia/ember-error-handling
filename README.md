@@ -26,6 +26,8 @@ This Ember addon amalgamates the two hooks into a single top level error handler
 
 It also allows specific errors to be squelched (ignored completely), which is paricularly useful when testing error scenarios.
 
+**Note** If you are using `await` (native promises), rather than `RSVP`, and you still wish to have the ability to squelch errors - you must still wrap the chain with `RSVP.resolve`.
+
 ## Installation
 
 ```
