@@ -8,8 +8,8 @@ export default class ErrorHandlingService extends Service {
 
   constructor() {
     super(...arguments);
-    this._setupEmberOnErrorHandler();
-    this._setupEmberRSVPErrorHandler();
+    this._setupErrorHandler();
+    this._setupRSVPHandler();
   }
 
   squelch(func) {
@@ -20,7 +20,7 @@ export default class ErrorHandlingService extends Service {
     return typeof this.onerror === 'function';
   }
 
-  _setupEmberOnErrorHandler() {
+  _setupErrorHandler() {
     const originalOnError = Ember.onerror;
 
     Ember.onerror = error => {
@@ -28,15 +28,23 @@ export default class ErrorHandlingService extends Service {
         originalOnError.call(Ember, error);
       }
 
-      this._handleError(error);
+      this._unhandledError(error);
     };
   }
 
-  _setupEmberRSVPErrorHandler() {
-    RSVP.on('error', this._handleError.bind(this));
+  _setupRSVPHandler() {
+    RSVP.on('error', this._unhandledRSVP.bind(this));
   }
 
-  _handleError(error) {
+  _unhandledError(error) {
+    return this._handle(error);
+  }
+
+  _unhandledRSVP(error) {
+    return this._handle(error);
+  }
+
+  _handle(error) {
     if (this._shouldSquelch(error)) {
       this.squelchedErrors.push(error);
       return;
