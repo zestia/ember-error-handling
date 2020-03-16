@@ -1,7 +1,7 @@
 import Controller from '@ember/controller';
 import { action } from '@ember/object';
 
-export default class Scenario4Controller extends Controller {
+export default class Scenario6Controller extends Controller {
   @action
   async loadData() {
     await this._loadData();
