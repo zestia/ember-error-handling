@@ -2,17 +2,17 @@ import { module, skip } from 'qunit';
 import { click, visit } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 
-module('acceptance:scenario7', function(hooks) {
+module('acceptance:scenario7', function (hooks) {
   setupApplicationTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.errorHandlingService = this.owner.lookup('service:error-handling');
   });
 
-  skip('scenario 7', async function(assert) {
+  skip('scenario 7', async function (assert) {
     assert.expect(1);
 
-    this.errorHandlingService.squelch(error => {
+    this.errorHandlingService.squelch((error) => {
       // Can't get here :(
 
       return error.message.match('scenario7error');

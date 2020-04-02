@@ -8,13 +8,13 @@ export default class Scenario1Controller extends Controller {
 
   @action
   loadData() {
-    return this._loadData().then(data => {
+    return this._loadData().then((data) => {
       this.data = data;
     });
   }
 
   _loadData() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       resolve('scenario1data');
     });
   }

@@ -2,14 +2,14 @@ import { module, test } from 'qunit';
 import { click, visit } from '@ember/test-helpers';
 import { setupApplicationTest } from 'ember-qunit';
 
-module('acceptance:scenario2', function(hooks) {
+module('acceptance:scenario2', function (hooks) {
   setupApplicationTest(hooks);
 
-  hooks.beforeEach(function() {
+  hooks.beforeEach(function () {
     this.errorHandlingService = this.owner.lookup('service:error-handling');
   });
 
-  test('scenario 2', async function(assert) {
+  test('scenario 2', async function (assert) {
     assert.expect(1);
 
     await visit('/scenario2');

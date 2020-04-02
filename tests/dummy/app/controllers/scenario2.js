@@ -8,7 +8,7 @@ export default class Scenario2Controller extends Controller {
 
   @action
   loadData() {
-    return this._loadData().catch(error => {
+    return this._loadData().catch((error) => {
       this.error = error.message;
     });
   }

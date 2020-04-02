@@ -7,20 +7,20 @@ import { reject } from 'rsvp';
 import { settled, validateErrorHandler } from '@ember/test-helpers';
 import { run } from '@ember/runloop';
 
-module('service:error-handling', function(hooks) {
+module('service:error-handling', function (hooks) {
   setupTest(hooks);
 
   const testError = new Error('foo');
 
-  module('uncaught errors', function() {
-    test('top level error handler', function(assert) {
+  module('uncaught errors', function () {
+    test('top level error handler', function (assert) {
       assert.expect(3);
 
       let capturedError;
 
       const service = this.owner.lookup('service:error-handling');
 
-      service.onerror = error => (capturedError = error);
+      service.onerror = (error) => (capturedError = error);
 
       assert.throws(() => {
         run(() => {
@@ -41,7 +41,7 @@ module('service:error-handling', function(hooks) {
       );
     });
 
-    test('squelching', function(assert) {
+    test('squelching', function (assert) {
       assert.expect(4);
 
       const service = this.owner.lookup('service:error-handling');
@@ -50,7 +50,7 @@ module('service:error-handling', function(hooks) {
 
       service.squelch(() => assert.step('squelch'));
 
-      service.squelch(error => {
+      service.squelch((error) => {
         assert.step('squelch');
 
         return error === testError;
@@ -73,19 +73,19 @@ module('service:error-handling', function(hooks) {
     });
   });
 
-  module('unhandled promise rejections', function() {
+  module('unhandled promise rejections', function () {
     // This module specifically tests with no rejection reason,
     // because if a reason is provided, Ember.onerror will handle it
     // not RSVP.on('error'). And we want to test the latter.
 
-    skip('top level error handler', async function(assert) {
+    skip('top level error handler', async function (assert) {
       assert.expect(2);
 
       let capturedError = null;
 
       const service = this.owner.lookup('service:error-handling');
 
-      service.onerror = error => (capturedError = error);
+      service.onerror = (error) => (capturedError = error);
 
       reject();
 
@@ -104,7 +104,7 @@ module('service:error-handling', function(hooks) {
       );
     });
 
-    test('squelching', async function(assert) {
+    test('squelching', async function (assert) {
       assert.expect(4);
 
       const service = this.owner.lookup('service:error-handling');
@@ -136,18 +136,18 @@ module('service:error-handling', function(hooks) {
     });
   });
 
-  module('Ember.onerror', function(hooks) {
+  module('Ember.onerror', function (hooks) {
     let originalOnError;
 
-    hooks.beforeEach(function() {
+    hooks.beforeEach(function () {
       originalOnError = Ember.onerror;
     });
 
-    hooks.afterEach(function() {
+    hooks.afterEach(function () {
       Ember.onerror = originalOnError;
     });
 
-    test('original handler', function(assert) {
+    test('original handler', function (assert) {
       assert.expect(4);
 
       Ember.onerror = () => assert.step('original error handler');
@@ -168,7 +168,7 @@ module('service:error-handling', function(hooks) {
       );
     });
 
-    test('validate re-throwing', function(assert) {
+    test('validate re-throwing', function (assert) {
       assert.expect(1);
 
       this.owner.lookup('service:error-handling');
@@ -181,14 +181,14 @@ module('service:error-handling', function(hooks) {
       );
     });
 
-    test('squelching', function(assert) {
+    test('squelching', function (assert) {
       assert.expect(2);
 
       Ember.onerror = assert.step('Ember.onerror');
 
       const service = this.owner.lookup('service:error-handling');
 
-      service.squelch(error => error === testError);
+      service.squelch((error) => error === testError);
 
       run(() => {
         throw testError;
@@ -201,18 +201,18 @@ module('service:error-handling', function(hooks) {
     });
   });
 
-  module('Ember.testing', function() {
+  module('Ember.testing', function () {
     let originalTesting;
 
-    hooks.beforeEach(function() {
+    hooks.beforeEach(function () {
       originalTesting = Ember.testing;
     });
 
-    hooks.afterEach(function() {
+    hooks.afterEach(function () {
       Ember.testing = originalTesting;
     });
 
-    test('no top error handler', function(assert) {
+    test('no top error handler', function (assert) {
       assert.expect(1);
 
       Ember.testing = false;

@@ -43,28 +43,28 @@ ember generate instance-initializer error-handling
 export function initialize(appInstance) {
   const errorHandlingService = appInstance.lookup('service:error-handling');
 
-  errorHandlingService.onerror = error => {
+  errorHandlingService.onerror = (error) => {
     // Here is a good place to send the error to a third party.
   };
 
-  errorHandlingService.squelch(error => {
+  errorHandlingService.squelch((error) => {
     // Return true to squelch
   });
 }
 
 export default {
   name: 'error-handling',
-  initialize
+  initialize,
 };
 ```
 
 ## Example
 
 ```javascript
-test('something', async function(assert) {
+test('something', async function (assert) {
   assert.expect(1);
 
-  errorHandlingService.squelch(error => {
+  errorHandlingService.squelch((error) => {
     // Squelch can be called multiple times
   });
 });
